@@ -378,7 +378,7 @@ export default function NewProductPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Environmental Impact</CardTitle>
-                <CardDescription>Add information about the product's environmental footprint.</CardDescription>
+                <CardDescription>{"Add information about the product's environmental footprint."}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">

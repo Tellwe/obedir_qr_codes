@@ -1,4 +1,4 @@
-import { QrCode, Package, Calendar, Recycle, Truck, Leaf, Info, PenTool as Tool, Box } from "lucide-react"
+import { QrCode, Package, Calendar, Recycle, Truck, Leaf, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -476,7 +476,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   <Card>
                     <CardHeader>
                       <CardTitle>Environmental Impact</CardTitle>
-                      <CardDescription>Information about the product's environmental footprint</CardDescription>
+                      <CardDescription>{"Information about the product's environmental footprint"}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="grid gap-4 sm:grid-cols-2">

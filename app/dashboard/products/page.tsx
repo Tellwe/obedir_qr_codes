@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, QrCode, Edit, Trash, Eye, Recycle, Leaf } from "lucide-react"
+import { Plus, Search, QrCode, Edit, Trash, Eye, Recycle } from "lucide-react"
 
 // Sample product data
 const initialProducts = [
