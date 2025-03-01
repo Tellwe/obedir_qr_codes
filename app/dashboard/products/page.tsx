@@ -54,7 +54,7 @@ const initialProducts = [
 ]
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState(initialProducts)
+  const [products] = useState(initialProducts)
   const [searchQuery, setSearchQuery] = useState("")
 
   const filteredProducts = products.filter(

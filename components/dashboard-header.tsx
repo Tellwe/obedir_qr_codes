@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,7 +15,6 @@ import { QrCode, Menu, User, Settings, LogOut } from "lucide-react"
 import { DashboardNav } from "@/components/dashboard-nav"
 
 export function DashboardHeader() {
-  const pathname = usePathname()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
