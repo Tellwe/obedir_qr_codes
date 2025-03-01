@@ -34,3 +34,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Edit using AI
+
+One way to continue to prompt to generate frontent is to open the repo in a ai chat. One example that works is bolt.new.
+
+Go to a browser and enter: 
+```
+https://bolt.new/[PUBLIC GITHUB REPOSITORY URL]
+```
+so in the case of this repo: 
+
+```
+https://bolt.new/github.com/Tellwe/obedir_qr_codes
+```
+
+This will open the repo in the state of master ready to edit code.*:
+I have not found how to create PRs from the prompt, but in the chat you can find which files that where edited and just copy-paste the content to the local repo and push from there.
+

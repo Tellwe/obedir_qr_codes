@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, QrCode, Edit, Trash, Eye } from "lucide-react"
+import { Plus, Search, QrCode, Edit, Trash, Eye, Recycle, Leaf } from "lucide-react"
 
 // Sample product data
 const initialProducts = [
@@ -18,6 +18,8 @@ const initialProducts = [
     createdAt: "2023-10-15",
     status: "active",
     scans: 145,
+    recyclability: "80%",
+    materials: ["Aluminum", "Plastic", "Leather"],
   },
   {
     id: "2",
@@ -26,6 +28,8 @@ const initialProducts = [
     createdAt: "2023-11-02",
     status: "active",
     scans: 89,
+    recyclability: "95%",
+    materials: ["Organic Coffee", "Paper", "Bioplastic"],
   },
   {
     id: "3",
@@ -34,6 +38,8 @@ const initialProducts = [
     createdAt: "2023-12-10",
     status: "active",
     scans: 212,
+    recyclability: "65%",
+    materials: ["Silicone", "Electronics", "Glass"],
   },
   {
     id: "4",
@@ -42,6 +48,8 @@ const initialProducts = [
     createdAt: "2024-01-05",
     status: "inactive",
     scans: 37,
+    recyclability: "90%",
+    materials: ["Leather", "Cotton", "Metal"],
   },
   {
     id: "5",
@@ -50,6 +58,8 @@ const initialProducts = [
     createdAt: "2024-01-20",
     status: "active",
     scans: 64,
+    recyclability: "75%",
+    materials: ["Vitamins", "Gelatin", "Paper"],
   },
 ]
 
@@ -105,13 +115,15 @@ export default function ProductsPage() {
                 <TableHead>Created</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Scans</TableHead>
+                <TableHead>Recyclability</TableHead>
+                <TableHead>Materials</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredProducts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     No products found. Try a different search or add a new product.
                   </TableCell>
                 </TableRow>
@@ -125,15 +137,37 @@ export default function ProductsPage() {
                       <Badge variant={product.status === "active" ? "default" : "secondary"}>{product.status}</Badge>
                     </TableCell>
                     <TableCell>{product.scans}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Recycle className="h-3.5 w-3.5 text-primary" />
+                        {product.recyclability}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {product.materials.slice(0, 2).map((material, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {material}
+                          </Badge>
+                        ))}
+                        {product.materials.length > 2 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{product.materials.length - 2}
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="icon">
                           <QrCode className="h-4 w-4" />
                           <span className="sr-only">QR Code</span>
                         </Button>
-                        <Button variant="ghost" size="icon">
-                          <Eye className="h-4 w-4" />
-                          <span className="sr-only">View</span>
+                        <Button variant="ghost" size="icon" asChild>
+                          <Link href={`/product/${product.id}`}>
+                            <Eye className="h-4 w-4" />
+                            <span className="sr-only">View</span>
+                          </Link>
                         </Button>
                         <Button variant="ghost" size="icon">
                           <Edit className="h-4 w-4" />
@@ -155,4 +189,3 @@ export default function ProductsPage() {
     </div>
   )
 }
-
