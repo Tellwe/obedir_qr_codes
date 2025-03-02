@@ -55,7 +55,12 @@ export default function Home() {
             <div className="flex items-center justify-center">
               <div className="relative h-[350px] w-[350px] rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 p-8">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <QrCode className="h-48 w-48 text-primary" strokeWidth={1} />
+                  <Image
+                    src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+                    alt="Company Logo"
+                    height={400}
+                    width={400}
+                  />
                 </div>
               </div>
             </div>
