@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { QrCode, ArrowLeft, Upload, Save, Plus, Trash } from "lucide-react"
 
+const LAMBDA_URL = "https://jvr6bib2t26jsx3kf6hhnwomzu0jsyeq.lambda-url.eu-north-1.on.aws"; // Replace with your actual Lambda URL
+
 export default function NewProductPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -22,11 +24,153 @@ export default function NewProductPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate product creation - in a real app, this would save to a backend
-    setTimeout(() => {
+    const formData = new FormData(e.currentTarget)
+    const payload = {
+      product_name: formData.get("name"),
+      product_data: {
+        basic_details: {
+          basic_information: {
+            product_name: formData.get("name"),
+            SKU: formData.get("sku"),
+            batch_number: formData.get("batch"),
+            category: formData.get("category"),
+            description: formData.get("description"),
+          },
+          physical_properties: {
+            size: {
+              height_cm: formData.get("size_height"),
+              width_cm: formData.get("size_width"),
+              depth_cm: formData.get("size_depth"),
+            },
+            color: formData.get("color"),
+            weight_kg: formData.get("weight"),
+            volume_cm3: formData.get("volume"),
+          },
+          features_and_specifications: {
+            key_features: formData.get("features"),
+            specifications: formData.get("specifications"),
+          },
+        },
+        materials: {
+          materials_composition: {
+            components: [
+              {
+                component: formData.get("component1"),
+                material: formData.get("material1"),
+                supplier: formData.get("supplier1"),
+                weight_kg: formData.get("weight1"),
+                recycled_percentage: formData.get("recycled_percentage1"),
+              },
+              {
+                component: formData.get("component2"),
+                material: formData.get("material2"),
+                supplier: formData.get("supplier2"),
+                weight_kg: formData.get("weight2"),
+                recycled_percentage: formData.get("recycled_percentage2"),
+              },
+            ],
+            certifications: formData.get("certifications"),
+            chemical_information: formData.get("chemical_info"),
+          },
+        },
+        supply_chain: {
+          supply_chain_information: {
+            manufacturers: [
+              {
+                name: formData.get("manufacturer_name1"),
+                location: formData.get("manufacturer_location1"),
+                role: formData.get("manufacturer_role1"),
+                certifications: formData.get("manufacturer_certifications1"),
+              },
+              {
+                name: formData.get("manufacturer_name2"),
+                location: formData.get("manufacturer_location2"),
+                role: formData.get("manufacturer_role2"),
+                certifications: formData.get("manufacturer_certifications2"),
+              },
+            ],
+            manufacturing_processes: [
+              {
+                process: formData.get("process1"),
+                location: formData.get("process_location1"),
+              },
+              {
+                process: formData.get("process2"),
+                location: formData.get("process_location2"),
+              },
+            ],
+          },
+        },
+        packaging: {
+          packaging_details: {
+            packaging_components: [
+              {
+                component: formData.get("packaging_component1"),
+                material: formData.get("packaging_material1"),
+                supplier: formData.get("packaging_supplier1"),
+                weight_kg: formData.get("packaging_weight1"),
+                recycled_percentage: formData.get("packaging_recycled_percentage1"),
+              },
+              {
+                component: formData.get("packaging_component2"),
+                material: formData.get("packaging_material2"),
+                supplier: formData.get("packaging_supplier2"),
+                weight_kg: formData.get("packaging_weight2"),
+                recycled_percentage: formData.get("packaging_recycled_percentage2"),
+              },
+            ],
+            disposal_instructions: formData.get("disposal_instructions"),
+          },
+        },
+        environmental: {
+          environmental_impact: {
+            carbon_footprint: formData.get("carbon_footprint"),
+            energy_consumption: formData.get("energy_consumption"),
+            water_usage: formData.get("water_usage"),
+            waste_emissions: formData.get("waste_emissions"),
+            recyclability: formData.get("recyclability"),
+            circular_economy: formData.get("circular_economy"),
+          },
+        },
+        care_and_repair: {
+          care_instructions: {
+            care_instructions: formData.get("care_instructions"),
+          },
+          repair_information: {
+            reparability: formData.get("repairability"),
+            spare_parts: formData.get("spare_parts"),
+            repair_services: formData.get("repair_services"),
+          },
+        },
+        end_of_life: {
+          end_of_life_information: {
+            disassembly_instructions: formData.get("disassembly_instructions"),
+            recycling_options: formData.get("recycling_options"),
+            take_back_programs: formData.get("take_back_programs"),
+          },
+        },
+      },
+    }
+
+    try {
+      const response = await fetch(`${LAMBDA_URL}/create_qr`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (response.ok) {
+        router.push("/dashboard/products")
+      } else {
+        console.error("Failed to create product")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    } finally {
       setIsLoading(false)
-      router.push("/dashboard/products")
-    }, 1000)
+    }
   }
 
   return (
@@ -62,19 +206,19 @@ export default function NewProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
                   <Label htmlFor="name">Product Name</Label>
-                  <Input id="name" placeholder="Enter product name" required />
+                  <Input id="name" name="name" placeholder="Enter product name" required />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="sku">SKU</Label>
-                  <Input id="sku" placeholder="Enter product SKU" required />
+                  <Input id="sku" name="sku" placeholder="Enter product SKU" required />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="batch">Batch Number</Label>
-                  <Input id="batch" placeholder="Enter batch number" />
+                  <Input id="batch" name="batch" placeholder="Enter batch number" />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="category">Category</Label>
-                  <Select defaultValue="electronics">
+                  <Select defaultValue="electronics" name="category">
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
@@ -90,7 +234,7 @@ export default function NewProductPage() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="description">Description</Label>
-                  <Textarea id="description" placeholder="Enter product description" className="min-h-[120px]" />
+                  <Textarea id="description" name="description" placeholder="Enter product description" className="min-h-[120px]" />
                 </div>
               </CardContent>
             </Card>
@@ -103,20 +247,28 @@ export default function NewProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="grid gap-2">
-                    <Label htmlFor="size">Size</Label>
-                    <Input id="size" placeholder="e.g., 10cm x 5cm x 2cm" />
+                    <Label htmlFor="size_height">Height (cm)</Label>
+                    <Input id="size_height" name="size_height" placeholder="e.g., 10" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="size_width">Width (cm)</Label>
+                    <Input id="size_width" name="size_width" placeholder="e.g., 5" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="size_depth">Depth (cm)</Label>
+                    <Input id="size_depth" name="size_depth" placeholder="e.g., 2" />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="color">Color</Label>
-                    <Input id="color" placeholder="e.g., Matte Black" />
+                    <Input id="color" name="color" placeholder="e.g., Matte Black" />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="weight">Weight</Label>
-                    <Input id="weight" placeholder="e.g., 250g" />
+                    <Label htmlFor="weight">Weight (kg)</Label>
+                    <Input id="weight" name="weight" placeholder="e.g., 0.25" />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="volume">Volume</Label>
-                    <Input id="volume" placeholder="e.g., 0.0027 cubic meters" />
+                    <Label htmlFor="volume">Volume (cm³)</Label>
+                    <Input id="volume" name="volume" placeholder="e.g., 0.0027" />
                   </div>
                 </div>
               </CardContent>
@@ -130,11 +282,11 @@ export default function NewProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
                   <Label htmlFor="features">Key Features</Label>
-                  <Textarea id="features" placeholder="Enter key product features (one per line)" className="min-h-[100px]" />
+                  <Textarea id="features" name="features" placeholder="Enter key product features (one per line)" className="min-h-[100px]" />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="specifications">Specifications</Label>
-                  <Textarea id="specifications" placeholder="Enter product specifications (one per line)" className="min-h-[100px]" />
+                  <Textarea id="specifications" name="specifications" placeholder="Enter product specifications (one per line)" className="min-h-[100px]" />
                 </div>
               </CardContent>
             </Card>
@@ -204,12 +356,12 @@ export default function NewProductPage() {
                 
                 <div className="grid gap-2">
                   <Label htmlFor="certifications">Certifications</Label>
-                  <Textarea id="certifications" placeholder="Enter relevant certifications (one per line)" className="min-h-[80px]" />
+                  <Textarea id="certifications" name="certifications" placeholder="Enter relevant certifications (one per line)" className="min-h-[80px]" />
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="chemical-info">Chemical Information</Label>
-                  <Textarea id="chemical-info" placeholder="Enter information about chemicals used or present in the product" className="min-h-[80px]" />
+                  <Textarea id="chemical-info" name="chemical_info" placeholder="Enter information about chemicals used or present in the product" className="min-h-[80px]" />
                 </div>
               </CardContent>
             </Card>
@@ -368,7 +520,7 @@ export default function NewProductPage() {
                 
                 <div className="grid gap-2">
                   <Label htmlFor="disposal-instructions">Disposal Instructions</Label>
-                  <Textarea id="disposal-instructions" placeholder="Enter instructions for proper disposal of packaging" className="min-h-[100px]" />
+                  <Textarea id="disposal-instructions" name="disposal_instructions" placeholder="Enter instructions for proper disposal of packaging" className="min-h-[100px]" />
                 </div>
               </CardContent>
             </Card>
@@ -384,30 +536,30 @@ export default function NewProductPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="grid gap-2">
                     <Label htmlFor="carbon-footprint">Carbon Footprint</Label>
-                    <Input id="carbon-footprint" placeholder="e.g., 8.5 kg CO2e for full product lifecycle" />
+                    <Input id="carbon-footprint" name="carbon_footprint" placeholder="e.g., 8.5 kg CO2e for full product lifecycle" />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="energy-consumption">Energy Consumption</Label>
-                    <Input id="energy-consumption" placeholder="e.g., Manufacturing: 12 kWh per unit" />
+                    <Input id="energy-consumption" name="energy_consumption" placeholder="e.g., Manufacturing: 12 kWh per unit" />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="water-usage">Water Usage</Label>
-                    <Input id="water-usage" placeholder="e.g., Manufacturing: 45 liters per unit" />
+                    <Input id="water-usage" name="water_usage" placeholder="e.g., Manufacturing: 45 liters per unit" />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="waste-emissions">Waste Emissions</Label>
-                    <Input id="waste-emissions" placeholder="e.g., 0.5 kg non-recyclable manufacturing waste per unit" />
+                    <Input id="waste-emissions" name="waste_emissions" placeholder="e.g., 0.5 kg non-recyclable manufacturing waste per unit" />
                   </div>
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="recyclability">Recyclability</Label>
-                  <Input id="recyclability" placeholder="e.g., 80% recyclable components" />
+                  <Input id="recyclability" name="recyclability" placeholder="e.g., 80% recyclable components" />
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="circular-economy">Circular Economy</Label>
-                  <Textarea id="circular-economy" placeholder="Describe how this product fits into a circular economy" className="min-h-[80px]" />
+                  <Textarea id="circular-economy" name="circular_economy" placeholder="Describe how this product fits into a circular economy" className="min-h-[80px]" />
                 </div>
               </CardContent>
             </Card>
@@ -422,7 +574,7 @@ export default function NewProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
                   <Label htmlFor="care-instructions">Care Instructions</Label>
-                  <Textarea id="care-instructions" placeholder="Enter care instructions (one per line)" className="min-h-[120px]" />
+                  <Textarea id="care-instructions" name="care_instructions" placeholder="Enter care instructions (one per line)" className="min-h-[120px]" />
                 </div>
               </CardContent>
             </Card>
@@ -435,17 +587,17 @@ export default function NewProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
                   <Label htmlFor="repairability">Repairability</Label>
-                  <Input id="repairability" placeholder="e.g., Repairability score: 7/10" />
+                  <Input id="repairability" name="repairability" placeholder="e.g., Repairability score: 7/10" />
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="spare-parts">Spare Parts</Label>
-                  <Textarea id="spare-parts" placeholder="Information about available spare parts" className="min-h-[80px]" />
+                  <Textarea id="spare-parts" name="spare_parts" placeholder="Information about available spare parts" className="min-h-[80px]" />
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="repair-services">Repair Services</Label>
-                  <Textarea id="repair-services" placeholder="Information about repair services and warranty" className="min-h-[80px]" />
+                  <Textarea id="repair-services" name="repair_services" placeholder="Information about repair services and warranty" className="min-h-[80px]" />
                 </div>
               </CardContent>
             </Card>
@@ -460,17 +612,17 @@ export default function NewProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
                   <Label htmlFor="disassembly">Disassembly Instructions</Label>
-                  <Textarea id="disassembly" placeholder="Instructions for disassembling the product for recycling" className="min-h-[100px]" />
+                  <Textarea id="disassembly" name="disassembly_instructions" placeholder="Instructions for disassembling the product for recycling" className="min-h-[100px]" />
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="recycling-options">Recycling Options</Label>
-                  <Textarea id="recycling-options" placeholder="Information about recycling options for the product" className="min-h-[100px]" />
+                  <Textarea id="recycling-options" name="recycling_options" placeholder="Information about recycling options for the product" className="min-h-[100px]" />
                 </div>
                 
                 <div className="grid gap-2">
                   <Label htmlFor="takeback">Take-Back Programs</Label>
-                  <Textarea id="takeback" placeholder="Information about manufacturer take-back programs" className="min-h-[80px]" />
+                  <Textarea id="takeback" name="take_back_programs" placeholder="Information about manufacturer take-back programs" className="min-h-[80px]" />
                 </div>
               </CardContent>
             </Card>
