@@ -9,96 +9,96 @@ import { useEffect, useState } from "react"
 
 const LAMBDA_URL = "https://jvr6bib2t26jsx3kf6hhnwomzu0jsyeq.lambda-url.eu-north-1.on.aws"; // Replace with your actual Lambda URL
 
-const getProductData = async (id: string) => {
-  try {
-    const response = await fetch(`${LAMBDA_URL}/read_qr/${id}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch product data");
-    }
-    const data_ = await response.json();
-    console.log(data_);
-    const data = data_.product_data;
-
-    // Map the incoming object to the Product interface
-    const product: Product = {
-      name: data.basic_details.basic_information.product_name,
-      sku: data.basic_details.basic_information.SKU,
-      batchNumber: data.basic_details.basic_information.batch_number,
-      description: data.basic_details.basic_information.description,
-      category: data.basic_details.basic_information.category,
-      createdAt: new Date().toISOString(), // Assuming createdAt is not provided in the incoming object
-      generalInfo: {
-        size: `${data.basic_details.physical_properties.size.height_cm} x ${data.basic_details.physical_properties.size.width_cm} x ${data.basic_details.physical_properties.size.depth_cm} cm`,
-        color: data.basic_details.physical_properties.color,
-        weight: `${data.basic_details.physical_properties.weight_kg} kg`,
-        volume: `${data.basic_details.physical_properties.volume_cm3} cm³`,
-        recyclability: data.environmental.environmental_impact.recyclability,
-        circularEconomy: data.environmental.environmental_impact.circular_economy,
-      },
-      features: data.basic_details.features_and_specifications.key_features.split("\n"),
-      specifications: data.basic_details.features_and_specifications.specifications.split("\n"),
-      materials: {
-        components: data.materials.materials_composition.components.map((component: any) => ({
-          name: component.component,
-          material: component.material,
-          supplier: component.supplier,
-          weight: component.weight_kg,
-          recycledContent: component.recycled_percentage,
-        })),
-        certifications: data.materials.materials_composition.certifications.split("\n"),
-        chemicalInfo: data.materials.materials_composition.chemical_information,
-      },
-      packaging: {
-        components: data.packaging.packaging_details.packaging_components.map((component: any) => ({
-          name: component.component,
-          material: component.material,
-          supplier: component.supplier,
-          weight: component.weight_kg,
-          recycledContent: component.recycled_percentage,
-        })),
-        disposalInstructions: data.packaging.packaging_details.disposal_instructions,
-      },
-      supplyChain: {
-        manufacturers: data.supply_chain.supply_chain_information.manufacturers.map((manufacturer: any) => ({
-          name: manufacturer.name,
-          location: manufacturer.location,
-          role: manufacturer.role,
-          certifications: manufacturer.certifications.split("\n"),
-        })),
-        processes: data.supply_chain.supply_chain_information.manufacturing_processes.map((process: any) => ({
-          type: process.process,
-          location: process.location,
-        })),
-      },
-      environmentalImpact: {
-        carbonFootprint: data.environmental.environmental_impact.carbon_footprint,
-        energyConsumption: data.environmental.environmental_impact.energy_consumption,
-        waterUsage: data.environmental.environmental_impact.water_usage,
-        wasteEmissions: data.environmental.environmental_impact.waste_emissions,
-      },
-      careInstructions: data.care_and_repair.care_instructions.care_instructions.split("\n"),
-      repair: {
-        repairability: data.care_and_repair.repair_information.reparability,
-        spareParts: data.care_and_repair.repair_information.spare_parts,
-        repairServices: data.care_and_repair.repair_information.repair_services,
-      },
-      endOfLife: {
-        disassembly: data.end_of_life.end_of_life_information.disassembly_instructions,
-        recyclingOptions: data.end_of_life.end_of_life_information.recycling_options,
-        takeback: data.end_of_life.end_of_life_information.take_back_programs,
-      },
-      company: {
-        name: "Company Name", // Assuming company information is not provided in the incoming object
-        website: "https://company-website.com", // Assuming company information is not provided in the incoming object
-        support: "support@company.com", // Assuming company information is not provided in the incoming object
-      },
+interface ProductData {
+  basic_details: {
+    basic_information: {
+      product_name: string;
+      SKU: string;
+      batch_number: string;
+      category: string;
+      description: string;
     };
-
-    return product;
-  } catch (error) {
-    console.error("Error fetching product data:", error);
-    return null;
-  }
+    physical_properties: {
+      size: {
+        height_cm: string;
+        width_cm: string;
+        depth_cm: string;
+      };
+      color: string;
+      weight_kg: string;
+      volume_cm3: string;
+    };
+    features_and_specifications: {
+      key_features: string;
+      specifications: string;
+    };
+  };
+  materials: {
+    materials_composition: {
+      components: {
+        component: string;
+        material: string;
+        supplier: string;
+        weight_kg: string;
+        recycled_percentage: string;
+      }[];
+      certifications: string;
+      chemical_information: string;
+    };
+  };
+  supply_chain: {
+    supply_chain_information: {
+      manufacturers: {
+        name: string;
+        location: string;
+        role: string;
+        certifications: string;
+      }[];
+      manufacturing_processes: {
+        process: string;
+        location: string;
+      }[];
+    };
+  };
+  packaging: {
+    packaging_details: {
+      packaging_components: {
+        component: string;
+        material: string;
+        supplier: string;
+        weight_kg: string;
+        recycled_percentage: string;
+      }[];
+      disposal_instructions: string;
+    };
+  };
+  environmental: {
+    environmental_impact: {
+      carbon_footprint: string;
+      energy_consumption: string;
+      water_usage: string;
+      waste_emissions: string;
+      recyclability: string;
+      circular_economy: string;
+    };
+  };
+  care_and_repair: {
+    care_instructions: {
+      care_instructions: string;
+    };
+    repair_information: {
+      reparability: string;
+      spare_parts: string;
+      repair_services: string;
+    };
+  };
+  end_of_life: {
+    end_of_life_information: {
+      disassembly_instructions: string;
+      recycling_options: string;
+      take_back_programs: string;
+    };
+  };
 }
 
 interface Product {
@@ -175,8 +175,101 @@ interface Product {
   };
 }
 
+const getProductData = async (id: string): Promise<Product | null> => {
+  try {
+    const response = await fetch(`${LAMBDA_URL}/read_qr/${id}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch product data");
+    }
+    const data_: { product_data: ProductData } = await response.json();
+    console.log(data_);
+    const data = data_.product_data;
+
+    // Map the incoming object to the Product interface
+    const product: Product = {
+      name: data.basic_details.basic_information.product_name,
+      sku: data.basic_details.basic_information.SKU,
+      batchNumber: data.basic_details.basic_information.batch_number,
+      description: data.basic_details.basic_information.description,
+      category: data.basic_details.basic_information.category,
+      createdAt: new Date().toISOString(), // Assuming createdAt is not provided in the incoming object
+      generalInfo: {
+        size: `${data.basic_details.physical_properties.size.height_cm} x ${data.basic_details.physical_properties.size.width_cm} x ${data.basic_details.physical_properties.size.depth_cm} cm`,
+        color: data.basic_details.physical_properties.color,
+        weight: `${data.basic_details.physical_properties.weight_kg} kg`,
+        volume: `${data.basic_details.physical_properties.volume_cm3} cm³`,
+        recyclability: data.environmental.environmental_impact.recyclability,
+        circularEconomy: data.environmental.environmental_impact.circular_economy,
+      },
+      features: data.basic_details.features_and_specifications.key_features.split("\n"),
+      specifications: data.basic_details.features_and_specifications.specifications.split("\n"),
+      materials: {
+        components: data.materials.materials_composition.components.map((component) => ({
+          name: component.component,
+          material: component.material,
+          supplier: component.supplier,
+          weight: component.weight_kg,
+          recycledContent: component.recycled_percentage,
+        })),
+        certifications: data.materials.materials_composition.certifications.split("\n"),
+        chemicalInfo: data.materials.materials_composition.chemical_information,
+      },
+      packaging: {
+        components: data.packaging.packaging_details.packaging_components.map((component) => ({
+          name: component.component,
+          material: component.material,
+          supplier: component.supplier,
+          weight: component.weight_kg,
+          recycledContent: component.recycled_percentage,
+        })),
+        disposalInstructions: data.packaging.packaging_details.disposal_instructions,
+      },
+      supplyChain: {
+        manufacturers: data.supply_chain.supply_chain_information.manufacturers.map((manufacturer) => ({
+          name: manufacturer.name,
+          location: manufacturer.location,
+          role: manufacturer.role,
+          certifications: manufacturer.certifications.split("\n"),
+        })),
+        processes: data.supply_chain.supply_chain_information.manufacturing_processes.map((process) => ({
+          type: process.process,
+          location: process.location,
+        })),
+      },
+      environmentalImpact: {
+        carbonFootprint: data.environmental.environmental_impact.carbon_footprint,
+        energyConsumption: data.environmental.environmental_impact.energy_consumption,
+        waterUsage: data.environmental.environmental_impact.water_usage,
+        wasteEmissions: data.environmental.environmental_impact.waste_emissions,
+      },
+      careInstructions: data.care_and_repair.care_instructions.care_instructions.split("\n"),
+      repair: {
+        repairability: data.care_and_repair.repair_information.reparability,
+        spareParts: data.care_and_repair.repair_information.spare_parts,
+        repairServices: data.care_and_repair.repair_information.repair_services,
+      },
+      endOfLife: {
+        disassembly: data.end_of_life.end_of_life_information.disassembly_instructions,
+        recyclingOptions: data.end_of_life.end_of_life_information.recycling_options,
+        takeback: data.end_of_life.end_of_life_information.take_back_programs,
+      },
+      company: {
+        name: "Company Name", // Assuming company information is not provided in the incoming object
+        website: "https://company-website.com", // Assuming company information is not provided in the incoming object
+        support: "support@company.com", // Assuming company information is not provided in the incoming object
+      },
+    };
+
+    return product;
+  } catch (error) {
+    console.error("Error fetching product data:", error);
+    return null;
+  }
+}
+
 export default function ProductPage({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProductData(params.id);
