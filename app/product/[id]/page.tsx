@@ -1,167 +1,193 @@
+"use client"
+
 import { QrCode, Package, Calendar, Recycle, Truck, Leaf, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
-// This would normally fetch from a database based on the product ID
-const getProductData = (id: string) => {
-  {
-    return {
-      id,
-      name: "EcoTech Performance Jacket",
-      description:
-        "A high-performance, sustainable jacket made from recycled materials. Designed for durability, weather resistance, and comfort.",
-      category: "Apparel",
-      createdAt: "March 2, 2025",
-      sku: "JKT-ET-2025",
-      batchNumber: "BN20250302",
-  
-      // General Product Information
-      generalInfo: {
-        size: "Available in S, M, L, XL, XXL",
-        color: "Forest Green, Midnight Black, Ocean Blue",
-        weight: "650g (Medium size)",
-        volume: "0.01 cubic meters",
-        recyclability: "85% recyclable components",
-        circularEconomy: "Designed for repair, reuse, and recycling programs"
-      },
-  
-      // Supply Chain Information
-      supplyChain: {
-        manufacturers: [
-          {
-            name: "GreenWear Textiles Ltd.",
-            location: "Bangladesh",
-            role: "Fabric Manufacturing",
-            certifications: ["GOTS", "Fair Trade Certified"]
-          },
-          {
-            name: "EcoStitch Apparel",
-            location: "Vietnam",
-            role: "Final Assembly",
-            certifications: ["ISO 9001", "WRAP Certified"]
-          }
-        ],
-        processes: [
-          { type: "Yarn Spinning", location: "India" },
-          { type: "Dyeing & Finishing", location: "Bangladesh" },
-          { type: "Cut & Sew", location: "Vietnam" }
-        ]
-      },
-  
-      // Materials Composition
-      materials: {
-        components: [
-          {
-            name: "Outer Shell",
-            material: "100% Recycled Polyester (rPET)",
-            supplier: "RePoly Mills, Taiwan",
-            weight: "300g",
-            recycledContent: "100% post-consumer recycled plastic bottles"
-          },
-          {
-            name: "Insulation",
-            material: "80% Recycled Polyester, 20% Bio-based fibers",
-            supplier: "EcoFill Technologies, China",
-            weight: "200g",
-            recycledContent: "80%"
-          },
-          {
-            name: "Lining",
-            material: "Organic Cotton",
-            supplier: "PureCotton Ltd., India",
-            weight: "150g",
-            recycledContent: "0%"
-          },
-          {
-            name: "Zippers",
-            material: "Recycled Nylon",
-            supplier: "FastenTech, Japan",
-            weight: "50g",
-            recycledContent: "100%"
-          }
-        ],
-        certifications: ["GOTS Certified Organic Cotton", "GRS Certified Recycled Materials", "OEKO-TEX Standard 100"],
-        chemicalInfo: "No PFAS used for waterproofing. Eco-friendly dyeing process."
-      },
-  
-      // Packaging Details
-      packaging: {
-        components: [
-          {
-            name: "Outer Bag",
-            material: "Biodegradable Cornstarch Film",
-            supplier: "GreenPack Solutions, China",
-            weight: "25g",
-            recycledContent: "0%"
-          },
-          {
-            name: "Hang Tag",
-            material: "Recycled Paperboard",
-            supplier: "EcoPrint Ltd., Vietnam",
-            weight: "10g",
-            recycledContent: "100%"
-          }
-        ],
-        disposalInstructions: "Outer bag is compostable. Hang tag is recyclable in standard paper recycling."
-      },
-  
-      // Environmental Impact
-      environmentalImpact: {
-        carbonFootprint: "12 kg CO2e for full product lifecycle",
-        energyConsumption: "Manufacturing: 20 kWh per unit",
-        waterUsage: "Manufacturing: 75 liters per unit",
-        wasteEmissions: "0.8 kg non-recyclable manufacturing waste per unit"
-      },
-  
-      // Care Instructions
-      careInstructions: [
-        "Machine wash cold with mild detergent",
-        "Tumble dry on low heat or hang dry",
-        "Do not use bleach or fabric softeners",
-        "Reapply waterproofing treatment as needed"
-      ],
-  
-      // End-of-Life Information
-      endOfLife: {
-        disassembly: "Zippers and insulation can be separated for proper recycling.",
-        recyclingOptions: "Fabric can be recycled through textile recycling programs.",
-        takeback: "Manufacturer offers a recycling program with store credit upon return of used jackets."
-      },
-  
-      // Repair Information
-      repair: {
-        repairability: "Repairability score: 8/10. Zippers and lining can be replaced with minimal tools.",
-        spareParts: "Replacement zippers and patches available from manufacturer for 5 years after purchase.",
-        repairServices: "Certified repair partners available globally. Lifetime repair warranty on stitching defects."
-      },
-  
-      features: [
-        "Water-resistant and windproof",
-        "Breathable insulation for all-weather comfort",
-        "Adjustable hood and cuffs",
-        "Lightweight yet warm design",
-        "Packable for travel convenience"
-      ],
-      specifications: [
-        "Weight: 650g (Medium size)",
-        "Material: Recycled Polyester, Organic Cotton",
-        "Insulation: 80% Recycled Polyester, 20% Bio-based fibers",
-        "Waterproof Rating: 10,000mm",
-        "Breathability: 8,000 g/m²/24h"
-      ],
-      company: {
-        name: "EcoWear Apparel Co.",
-        website: "https://ecowear.com",
-        support: "support@ecowear.com"
-      },
+import { useEffect, useState } from "react"
+
+const LAMBDA_URL = "https://jvr6bib2t26jsx3kf6hhnwomzu0jsyeq.lambda-url.eu-north-1.on.aws"; // Replace with your actual Lambda URL
+
+const getProductData = async (id: string) => {
+  try {
+    const response = await fetch(`${LAMBDA_URL}/read_qr/${id}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch product data");
     }
+    const data_ = await response.json();
+    console.log(data_);
+    const data = data_.product_data;
+
+    // Map the incoming object to the Product interface
+    const product: Product = {
+      name: data.basic_details.basic_information.product_name,
+      sku: data.basic_details.basic_information.SKU,
+      batchNumber: data.basic_details.basic_information.batch_number,
+      description: data.basic_details.basic_information.description,
+      category: data.basic_details.basic_information.category,
+      createdAt: new Date().toISOString(), // Assuming createdAt is not provided in the incoming object
+      generalInfo: {
+        size: `${data.basic_details.physical_properties.size.height_cm} x ${data.basic_details.physical_properties.size.width_cm} x ${data.basic_details.physical_properties.size.depth_cm} cm`,
+        color: data.basic_details.physical_properties.color,
+        weight: `${data.basic_details.physical_properties.weight_kg} kg`,
+        volume: `${data.basic_details.physical_properties.volume_cm3} cm³`,
+        recyclability: data.environmental.environmental_impact.recyclability,
+        circularEconomy: data.environmental.environmental_impact.circular_economy,
+      },
+      features: data.basic_details.features_and_specifications.key_features.split("\n"),
+      specifications: data.basic_details.features_and_specifications.specifications.split("\n"),
+      materials: {
+        components: data.materials.materials_composition.components.map((component: any) => ({
+          name: component.component,
+          material: component.material,
+          supplier: component.supplier,
+          weight: component.weight_kg,
+          recycledContent: component.recycled_percentage,
+        })),
+        certifications: data.materials.materials_composition.certifications.split("\n"),
+        chemicalInfo: data.materials.materials_composition.chemical_information,
+      },
+      packaging: {
+        components: data.packaging.packaging_details.packaging_components.map((component: any) => ({
+          name: component.component,
+          material: component.material,
+          supplier: component.supplier,
+          weight: component.weight_kg,
+          recycledContent: component.recycled_percentage,
+        })),
+        disposalInstructions: data.packaging.packaging_details.disposal_instructions,
+      },
+      supplyChain: {
+        manufacturers: data.supply_chain.supply_chain_information.manufacturers.map((manufacturer: any) => ({
+          name: manufacturer.name,
+          location: manufacturer.location,
+          role: manufacturer.role,
+          certifications: manufacturer.certifications.split("\n"),
+        })),
+        processes: data.supply_chain.supply_chain_information.manufacturing_processes.map((process: any) => ({
+          type: process.process,
+          location: process.location,
+        })),
+      },
+      environmentalImpact: {
+        carbonFootprint: data.environmental.environmental_impact.carbon_footprint,
+        energyConsumption: data.environmental.environmental_impact.energy_consumption,
+        waterUsage: data.environmental.environmental_impact.water_usage,
+        wasteEmissions: data.environmental.environmental_impact.waste_emissions,
+      },
+      careInstructions: data.care_and_repair.care_instructions.care_instructions.split("\n"),
+      repair: {
+        repairability: data.care_and_repair.repair_information.reparability,
+        spareParts: data.care_and_repair.repair_information.spare_parts,
+        repairServices: data.care_and_repair.repair_information.repair_services,
+      },
+      endOfLife: {
+        disassembly: data.end_of_life.end_of_life_information.disassembly_instructions,
+        recyclingOptions: data.end_of_life.end_of_life_information.recycling_options,
+        takeback: data.end_of_life.end_of_life_information.take_back_programs,
+      },
+      company: {
+        name: "Company Name", // Assuming company information is not provided in the incoming object
+        website: "https://company-website.com", // Assuming company information is not provided in the incoming object
+        support: "support@company.com", // Assuming company information is not provided in the incoming object
+      },
+    };
+
+    return product;
+  } catch (error) {
+    console.error("Error fetching product data:", error);
+    return null;
   }
-  
+}
+
+interface Product {
+  name: string;
+  sku: string;
+  batchNumber: string;
+  description: string;
+  category: string;
+  createdAt: string;
+  generalInfo: {
+    size: string;
+    color: string;
+    weight: string;
+    volume: string;
+    recyclability: string;
+    circularEconomy: string;
+  };
+  features: string[];
+  specifications: string[];
+  materials: {
+    components: {
+      name: string;
+      material: string;
+      supplier: string;
+      weight: string;
+      recycledContent: string;
+    }[];
+    certifications: string[];
+    chemicalInfo: string;
+  };
+  packaging: {
+    components: {
+      name: string;
+      material: string;
+      supplier: string;
+      weight: string;
+      recycledContent: string;
+    }[];
+    disposalInstructions: string;
+  };
+  supplyChain: {
+    manufacturers: {
+      name: string;
+      location: string;
+      role: string;
+      certifications: string[];
+    }[];
+    processes: {
+      type: string;
+      location: string;
+    }[];
+  };
+  environmentalImpact: {
+    carbonFootprint: string;
+    energyConsumption: string;
+    waterUsage: string;
+    wasteEmissions: string;
+  };
+  careInstructions: string[];
+  repair: {
+    repairability: string;
+    spareParts: string;
+    repairServices: string;
+  };
+  endOfLife: {
+    disassembly: string;
+    recyclingOptions: string;
+    takeback: string;
+  };
+  company: {
+    name: string;
+    website: string;
+    support: string;
+  };
 }
 
 export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = getProductData(params.id)
+  const [product, setProduct] = useState<Product | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getProductData(params.id);
+      setProduct(data);
+    };
+    fetchData();
+  }, [params.id]);
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
