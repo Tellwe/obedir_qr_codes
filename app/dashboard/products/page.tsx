@@ -10,57 +10,57 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Search, QrCode, Edit, Trash, Eye, Recycle } from "lucide-react"
 
 // Sample product data
-const initialProducts = [
+const initialProducts =  [
   {
     id: "1",
-    name: "Premium Headphones",
-    category: "Electronics",
-    createdAt: "2023-10-15",
+    name: "EcoTech Performance Jacket",
+    category: "Textiles",
+    createdAt: "2025-03-02",
     status: "active",
     scans: 145,
-    recyclability: "80%",
-    materials: ["Aluminum", "Plastic", "Leather"],
+    recyclability: "85%",
+    materials: ["Recycled Polyester", "Organic Cotton", "Recycled Nylon"]
   },
   {
     id: "2",
-    name: "Organic Coffee Beans",
-    category: "Food & Beverage",
-    createdAt: "2023-11-02",
+    name: "Organic Cotton T-Shirt",
+    category: "Textiles",
+    createdAt: "2024-06-10",
     status: "active",
     scans: 89,
     recyclability: "95%",
-    materials: ["Organic Coffee", "Paper", "Bioplastic"],
+    materials: ["Organic Cotton", "Water-based Dye"]
   },
   {
     id: "3",
-    name: "Fitness Tracker",
-    category: "Wearables",
-    createdAt: "2023-12-10",
+    name: "Merino Wool Sweater",
+    category: "Textiles",
+    createdAt: "2024-08-15",
     status: "active",
     scans: 212,
-    recyclability: "65%",
-    materials: ["Silicone", "Electronics", "Glass"],
+    recyclability: "80%",
+    materials: ["Merino Wool", "Natural Dyes"]
   },
   {
     id: "4",
-    name: "Leather Wallet",
-    category: "Accessories",
-    createdAt: "2024-01-05",
+    name: "Denim Jeans",
+    category: "Textiles",
+    createdAt: "2024-09-25",
     status: "inactive",
     scans: 37,
-    recyclability: "90%",
-    materials: ["Leather", "Cotton", "Metal"],
+    recyclability: "75%",
+    materials: ["Organic Cotton", "Recycled Polyester", "Metal Buttons"]
   },
   {
     id: "5",
-    name: "Vitamin Supplement",
-    category: "Health",
-    createdAt: "2024-01-20",
+    name: "Recycled Polyester Windbreaker",
+    category: "Textiles",
+    createdAt: "2024-11-05",
     status: "active",
     scans: 64,
-    recyclability: "75%",
-    materials: ["Vitamins", "Gelatin", "Paper"],
-  },
+    recyclability: "90%",
+    materials: ["Recycled Polyester", "Waterproof Coating"]
+  }
 ]
 
 export default function ProductsPage() {

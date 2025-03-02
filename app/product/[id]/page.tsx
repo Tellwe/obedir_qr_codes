@@ -2,189 +2,162 @@ import { QrCode, Package, Calendar, Recycle, Truck, Leaf, Info } from "lucide-re
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import Image from "next/image"
 // This would normally fetch from a database based on the product ID
 const getProductData = (id: string) => {
-  return {
-    id,
-    name: "Premium Wireless Headphones",
-    description:
-      "Experience crystal-clear sound with our premium wireless headphones. Featuring noise cancellation technology and long battery life.",
-    category: "Electronics",
-    createdAt: "January 15, 2024",
-    sku: "HDPH-PRO-2024",
-    batchNumber: "BN20240115",
-    
-    // General Product Information
-    generalInfo: {
-      size: "Over-ear, 190mm x 175mm x 80mm",
-      color: "Matte Black",
-      weight: "250g",
-      volume: "0.0027 cubic meters",
-      recyclability: "80% recyclable components",
-      circularEconomy: "Eligible for manufacturer take-back program for recycling and refurbishment"
-    },
-    
-    // Supply Chain Information
-    supplyChain: {
-      manufacturers: [
-        {
-          name: "TechAudio Manufacturing Ltd.",
-          location: "Shenzhen, China",
-          role: "Final Assembly",
-          certifications: ["ISO 9001", "ISO 14001"]
-        },
-        {
-          name: "SoundComponents Inc.",
-          location: "Taiwan",
-          role: "Audio Driver Production",
-          certifications: ["ISO 9001"]
-        }
+  {
+    return {
+      id,
+      name: "EcoTech Performance Jacket",
+      description:
+        "A high-performance, sustainable jacket made from recycled materials. Designed for durability, weather resistance, and comfort.",
+      category: "Apparel",
+      createdAt: "March 2, 2025",
+      sku: "JKT-ET-2025",
+      batchNumber: "BN20250302",
+  
+      // General Product Information
+      generalInfo: {
+        size: "Available in S, M, L, XL, XXL",
+        color: "Forest Green, Midnight Black, Ocean Blue",
+        weight: "650g (Medium size)",
+        volume: "0.01 cubic meters",
+        recyclability: "85% recyclable components",
+        circularEconomy: "Designed for repair, reuse, and recycling programs"
+      },
+  
+      // Supply Chain Information
+      supplyChain: {
+        manufacturers: [
+          {
+            name: "GreenWear Textiles Ltd.",
+            location: "Bangladesh",
+            role: "Fabric Manufacturing",
+            certifications: ["GOTS", "Fair Trade Certified"]
+          },
+          {
+            name: "EcoStitch Apparel",
+            location: "Vietnam",
+            role: "Final Assembly",
+            certifications: ["ISO 9001", "WRAP Certified"]
+          }
+        ],
+        processes: [
+          { type: "Yarn Spinning", location: "India" },
+          { type: "Dyeing & Finishing", location: "Bangladesh" },
+          { type: "Cut & Sew", location: "Vietnam" }
+        ]
+      },
+  
+      // Materials Composition
+      materials: {
+        components: [
+          {
+            name: "Outer Shell",
+            material: "100% Recycled Polyester (rPET)",
+            supplier: "RePoly Mills, Taiwan",
+            weight: "300g",
+            recycledContent: "100% post-consumer recycled plastic bottles"
+          },
+          {
+            name: "Insulation",
+            material: "80% Recycled Polyester, 20% Bio-based fibers",
+            supplier: "EcoFill Technologies, China",
+            weight: "200g",
+            recycledContent: "80%"
+          },
+          {
+            name: "Lining",
+            material: "Organic Cotton",
+            supplier: "PureCotton Ltd., India",
+            weight: "150g",
+            recycledContent: "0%"
+          },
+          {
+            name: "Zippers",
+            material: "Recycled Nylon",
+            supplier: "FastenTech, Japan",
+            weight: "50g",
+            recycledContent: "100%"
+          }
+        ],
+        certifications: ["GOTS Certified Organic Cotton", "GRS Certified Recycled Materials", "OEKO-TEX Standard 100"],
+        chemicalInfo: "No PFAS used for waterproofing. Eco-friendly dyeing process."
+      },
+  
+      // Packaging Details
+      packaging: {
+        components: [
+          {
+            name: "Outer Bag",
+            material: "Biodegradable Cornstarch Film",
+            supplier: "GreenPack Solutions, China",
+            weight: "25g",
+            recycledContent: "0%"
+          },
+          {
+            name: "Hang Tag",
+            material: "Recycled Paperboard",
+            supplier: "EcoPrint Ltd., Vietnam",
+            weight: "10g",
+            recycledContent: "100%"
+          }
+        ],
+        disposalInstructions: "Outer bag is compostable. Hang tag is recyclable in standard paper recycling."
+      },
+  
+      // Environmental Impact
+      environmentalImpact: {
+        carbonFootprint: "12 kg CO2e for full product lifecycle",
+        energyConsumption: "Manufacturing: 20 kWh per unit",
+        waterUsage: "Manufacturing: 75 liters per unit",
+        wasteEmissions: "0.8 kg non-recyclable manufacturing waste per unit"
+      },
+  
+      // Care Instructions
+      careInstructions: [
+        "Machine wash cold with mild detergent",
+        "Tumble dry on low heat or hang dry",
+        "Do not use bleach or fabric softeners",
+        "Reapply waterproofing treatment as needed"
       ],
-      processes: [
-        { type: "Component Manufacturing", location: "Taiwan, China, Malaysia" },
-        { type: "Assembly", location: "Shenzhen, China" },
-        { type: "Quality Testing", location: "Shenzhen, China" }
-      ]
-    },
-    
-    // Materials Composition
-    materials: {
-      components: [
-        {
-          name: "Headband",
-          material: "Aluminum frame with protein leather padding",
-          supplier: "MetalWorks Ltd., Shanghai, China",
-          weight: "65g",
-          recycledContent: "30% recycled aluminum"
-        },
-        {
-          name: "Ear Cushions",
-          material: "Memory foam with protein leather covering",
-          supplier: "ComfortFoam Inc., Vietnam",
-          weight: "45g",
-          recycledContent: "0%"
-        },
-        {
-          name: "Driver Units",
-          material: "40mm dynamic drivers with neodymium magnets",
-          supplier: "SoundComponents Inc., Taiwan",
-          weight: "50g",
-          recycledContent: "0%"
-        },
-        {
-          name: "Circuit Board",
-          material: "PCB with copper traces and electronic components",
-          supplier: "ElectroTech Ltd., Shenzhen, China",
-          weight: "30g",
-          recycledContent: "0%"
-        },
-        {
-          name: "Battery",
-          material: "Lithium-ion rechargeable",
-          supplier: "PowerCell Inc., South Korea",
-          weight: "45g",
-          recycledContent: "0%",
-          hazardous: true
-        },
-        {
-          name: "Outer Shell",
-          material: "ABS plastic",
-          supplier: "PlasticTech Co., Guangzhou, China",
-          weight: "60g",
-          recycledContent: "15% post-consumer recycled plastic"
-        }
+  
+      // End-of-Life Information
+      endOfLife: {
+        disassembly: "Zippers and insulation can be separated for proper recycling.",
+        recyclingOptions: "Fabric can be recycled through textile recycling programs.",
+        takeback: "Manufacturer offers a recycling program with store credit upon return of used jackets."
+      },
+  
+      // Repair Information
+      repair: {
+        repairability: "Repairability score: 8/10. Zippers and lining can be replaced with minimal tools.",
+        spareParts: "Replacement zippers and patches available from manufacturer for 5 years after purchase.",
+        repairServices: "Certified repair partners available globally. Lifetime repair warranty on stitching defects."
+      },
+  
+      features: [
+        "Water-resistant and windproof",
+        "Breathable insulation for all-weather comfort",
+        "Adjustable hood and cuffs",
+        "Lightweight yet warm design",
+        "Packable for travel convenience"
       ],
-      certifications: ["RoHS Compliant", "REACH Compliant", "Bluetooth 5.2 Certified"],
-      chemicalInfo: "Contains lithium-ion battery which is classified as hazardous waste. No PFAS or BFRs used in manufacturing."
-    },
-    
-    // Packaging Details
-    packaging: {
-      components: [
-        {
-          name: "Outer Box",
-          material: "Cardboard",
-          supplier: "EcoPackaging Ltd., China",
-          weight: "120g",
-          recycledContent: "90% post-consumer recycled content"
-        },
-        {
-          name: "Inner Tray",
-          material: "Molded paper pulp",
-          supplier: "GreenPulp Inc., China",
-          weight: "60g",
-          recycledContent: "100% recycled paper"
-        },
-        {
-          name: "Protective Bag",
-          material: "LDPE plastic",
-          supplier: "CleanWrap Co., China",
-          weight: "10g",
-          recycledContent: "0%"
-        },
-        {
-          name: "User Manual",
-          material: "Paper",
-          supplier: "PrintWorks Ltd., China",
-          weight: "25g",
-          recycledContent: "70% recycled paper"
-        }
+      specifications: [
+        "Weight: 650g (Medium size)",
+        "Material: Recycled Polyester, Organic Cotton",
+        "Insulation: 80% Recycled Polyester, 20% Bio-based fibers",
+        "Waterproof Rating: 10,000mm",
+        "Breathability: 8,000 g/m²/24h"
       ],
-      disposalInstructions: "Cardboard box and paper pulp tray are recyclable in standard paper recycling. Plastic bag should be recycled with plastic film collection where available."
-    },
-    
-    // Environmental Impact
-    environmentalImpact: {
-      carbonFootprint: "8.5 kg CO2e for full product lifecycle",
-      energyConsumption: "Manufacturing: 12 kWh per unit",
-      waterUsage: "Manufacturing: 45 liters per unit",
-      wasteEmissions: "0.5 kg non-recyclable manufacturing waste per unit"
-    },
-    
-    // Care Instructions
-    careInstructions: [
-      "Clean ear cushions with a slightly damp cloth",
-      "Store in provided case when not in use",
-      "Avoid exposure to extreme temperatures",
-      "Charge battery only with provided USB-C cable",
-      "Replace ear cushions when worn (available from manufacturer)"
-    ],
-    
-    // End-of-Life Information
-    endOfLife: {
-      disassembly: "Ear cushions can be removed for replacement or recycling. Battery can be removed with standard screwdriver for proper disposal.",
-      recyclingOptions: "Electronics can be recycled at e-waste collection points. Battery must be recycled at designated battery recycling locations.",
-      takeback: "Manufacturer offers 15% discount on new purchase when returning old headphones for recycling."
-    },
-    
-    // Repair Information
-    repair: {
-      repairability: "Repairability score: 7/10. Ear cushions and cable are replaceable without tools. Battery and driver replacement requires basic tools.",
-      spareParts: "Replacement ear cushions, cables, and batteries available from manufacturer for 5 years after product discontinuation.",
-      repairServices: "Authorized repair centers in major cities. 2-year warranty covers manufacturing defects."
-    },
-    
-    features: [
-      "Active Noise Cancellation",
-      "40-hour Battery Life",
-      "Bluetooth 5.2",
-      "Comfortable Over-ear Design",
-      "Built-in Microphone",
-    ],
-    specifications: [
-      "Weight: 250g",
-      "Frequency Response: 20Hz - 20kHz",
-      "Impedance: 32 Ohm",
-      "Driver Size: 40mm",
-      "Charging: USB-C",
-    ],
-    company: {
-      name: "TechAudio Inc.",
-      website: "https://example.com",
-      support: "support@example.com",
-    },
+      company: {
+        name: "EcoWear Apparel Co.",
+        website: "https://ecowear.com",
+        support: "support@ecowear.com"
+      },
+    }
   }
+  
 }
 
 export default function ProductPage({ params }: { params: { id: string } }) {
@@ -195,7 +168,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <QrCode className="h-6 w-6 text-primary" />
+            <Image
+              src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+              alt="Company Logo"
+              height={40}
+              width={40}
+            />
             <span className="text-xl font-bold">Product Info</span>
           </div>
           <div className="flex items-center gap-2">
@@ -349,7 +327,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                             </Table>
                           </div>
                         </div>
-                        
+
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div>
                             <h3 className="font-medium mb-2">Certifications</h3>
@@ -402,7 +380,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                             </Table>
                           </div>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Disposal Instructions</h3>
                           <p className="text-sm text-muted-foreground">{product.packaging.disposalInstructions}</p>
@@ -445,7 +423,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                             </Table>
                           </div>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Manufacturing Processes</h3>
                           <div className="rounded-md border">
@@ -489,7 +467,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                           </div>
                           <p className="text-sm text-muted-foreground">{product.environmentalImpact.carbonFootprint}</p>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
@@ -499,7 +477,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                           </div>
                           <p className="text-sm text-muted-foreground">{product.environmentalImpact.energyConsumption}</p>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
@@ -509,7 +487,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                           </div>
                           <p className="text-sm text-muted-foreground">{product.environmentalImpact.waterUsage}</p>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
@@ -550,12 +528,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                           <h3 className="font-medium mb-2">Repairability</h3>
                           <p className="text-sm text-muted-foreground">{product.repair.repairability}</p>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Spare Parts</h3>
                           <p className="text-sm text-muted-foreground">{product.repair.spareParts}</p>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Repair Services</h3>
                           <p className="text-sm text-muted-foreground">{product.repair.repairServices}</p>
@@ -577,12 +555,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                           <h3 className="font-medium mb-2">Disassembly Instructions</h3>
                           <p className="text-sm text-muted-foreground">{product.endOfLife.disassembly}</p>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Recycling Options</h3>
                           <p className="text-sm text-muted-foreground">{product.endOfLife.recyclingOptions}</p>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-medium mb-2">Take-Back Programs</h3>
                           <p className="text-sm text-muted-foreground">{product.endOfLife.takeback}</p>
@@ -641,11 +619,15 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       <footer className="border-t border-border/40 bg-background/95">
         <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
           <div className="flex items-center gap-2">
-            <QrCode className="h-5 w-5 text-primary" />
-            <span className="text-sm font-semibold">QR Product Info</span>
+            <Image
+              src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+              alt="Company Logo"
+              height={40}
+              width={40}
+            />            <span className="text-sm font-semibold">Obedir Link</span>
           </div>
           <p className="text-center text-sm text-muted-foreground md:text-left">
-            &copy; {new Date().getFullYear()} QR Product Info. All rights reserved.
+            &copy; {new Date().getFullYear()} Obedir Link. All rights reserved.
           </p>
         </div>
       </footer>

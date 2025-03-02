@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "QR Product Info",
-  description: "Product information via QR codes",
+  title: "Obedir Link",
+  description: "Seamlessly Compliant, Effortlessly Connected.",
 }
 
 export default function RootLayout({

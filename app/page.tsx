@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image";
 import { Button } from "@/components/ui/button"
 import { QrCode, Database, Zap } from "lucide-react"
 
@@ -8,8 +9,13 @@ export default function Home() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <QrCode className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">QR Product Info</span>
+            <Image
+              src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+              alt="Company Logo"
+              height={40}
+              width={40}
+            />
+            <span className="text-xl font-bold">Obedir Link</span>
           </div>
           <nav className="flex items-center gap-4">
             <Link href="/login">
@@ -27,7 +33,7 @@ export default function Home() {
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Connect Your Products with QR Codes
+                  Seamlessly Compliant. Effortlessly Connected.
                 </h1>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Create QR codes for your products and manage product information through our easy-to-use platform.
@@ -91,11 +97,16 @@ export default function Home() {
       <footer className="border-t border-border/40 bg-background/95">
         <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
           <div className="flex items-center gap-2">
-            <QrCode className="h-5 w-5 text-primary" />
-            <span className="text-sm font-semibold">QR Product Info</span>
+            <Image
+              src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+              alt="Company Logo"
+              height={40}
+              width={40}
+            />
+            <span className="text-sm font-semibold">Obedir Link</span>
           </div>
           <p className="text-center text-sm text-muted-foreground md:text-left">
-            &copy; {new Date().getFullYear()} QR Product Info. All rights reserved.
+            &copy; {new Date().getFullYear()} Obedir Link. All rights reserved.
           </p>
         </div>
       </footer>

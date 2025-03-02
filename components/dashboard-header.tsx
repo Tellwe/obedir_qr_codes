@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { QrCode, Menu, User, Settings, LogOut } from "lucide-react"
+import { Menu, User, Settings, LogOut } from "lucide-react"
 import { DashboardNav } from "@/components/dashboard-nav"
 
 export function DashboardHeader() {
@@ -29,15 +30,25 @@ export function DashboardHeader() {
             </SheetTrigger>
             <SheetContent side="left" className="w-[240px] sm:w-[280px]">
               <Link href="/" className="flex items-center gap-2 pb-4">
-                <QrCode className="h-5 w-5 text-primary" />
+                <Image
+                  src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+                  alt="Company Logo"
+                  height={40}
+                  width={40}
+                />
                 <span className="font-bold">QR Product Info</span>
               </Link>
               <DashboardNav />
             </SheetContent>
           </Sheet>
           <Link href="/" className="flex items-center gap-2">
-            <QrCode className="h-5 w-5 text-primary" />
-            <span className="hidden font-bold md:inline-block">QR Product Info</span>
+            <Image
+              src="/images/Obedir-Icon-Green.png" // Path is relative to `public/`
+              alt="Company Logo"
+              height={40}
+              width={40}
+            />
+            <span className="hidden font-bold md:inline-block">Obedir Link</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end gap-4">
