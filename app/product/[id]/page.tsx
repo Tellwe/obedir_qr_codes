@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 const LAMBDA_URL = "https://jvr6bib2t26jsx3kf6hhnwomzu0jsyeq.lambda-url.eu-north-1.on.aws"; // Replace with your actual Lambda URL
 
 interface ProductData {
+  uuid: string;
   basic_details: {
     basic_information: {
       product_name: string;
@@ -181,9 +182,8 @@ const getProductData = async (id: string): Promise<Product | null> => {
     if (!response.ok) {
       throw new Error("Failed to fetch product data");
     }
-    const data_: { product_data: ProductData } = await response.json();
-    console.log(data_);
-    const data = data_.product_data;
+    const data: ProductData = await response.json();
+    console.log(data);
 
     // Map the incoming object to the Product interface
     const product: Product = {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,68 +9,77 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Plus, Search, QrCode, Edit, Trash, Eye, Recycle } from "lucide-react"
 
-// Sample product data
-const initialProducts =  [
-  {
-    id: "1",
-    name: "EcoTech Performance Jacket",
-    category: "Textiles",
-    createdAt: "2025-03-02",
-    status: "active",
-    scans: 145,
-    recyclability: "85%",
-    materials: ["Recycled Polyester", "Organic Cotton", "Recycled Nylon"]
-  },
-  {
-    id: "2",
-    name: "Organic Cotton T-Shirt",
-    category: "Textiles",
-    createdAt: "2024-06-10",
-    status: "active",
-    scans: 89,
-    recyclability: "95%",
-    materials: ["Organic Cotton", "Water-based Dye"]
-  },
-  {
-    id: "3",
-    name: "Merino Wool Sweater",
-    category: "Textiles",
-    createdAt: "2024-08-15",
-    status: "active",
-    scans: 212,
-    recyclability: "80%",
-    materials: ["Merino Wool", "Natural Dyes"]
-  },
-  {
-    id: "4",
-    name: "Denim Jeans",
-    category: "Textiles",
-    createdAt: "2024-09-25",
-    status: "inactive",
-    scans: 37,
-    recyclability: "75%",
-    materials: ["Organic Cotton", "Recycled Polyester", "Metal Buttons"]
-  },
-  {
-    id: "5",
-    name: "Recycled Polyester Windbreaker",
-    category: "Textiles",
-    createdAt: "2024-11-05",
-    status: "active",
-    scans: 64,
-    recyclability: "90%",
-    materials: ["Recycled Polyester", "Waterproof Coating"]
-  }
-]
+const LAMBDA_URL = "https://jvr6bib2t26jsx3kf6hhnwomzu0jsyeq.lambda-url.eu-north-1.on.aws"; // Replace with your actual Lambda URL
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  createdAt: string;
+  status: string;
+  scans: number;
+  recyclability: string;
+  materials: string[];
+}
+interface FetchedData {
+  uuid: string;
+  product_name: string;
+}
 
 export default function ProductsPage() {
-  const [products] = useState(initialProducts)
+  const [products, setProducts] = useState<Product[]>([])
   const [searchQuery, setSearchQuery] = useState("")
 
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch(`${LAMBDA_URL}/list_qr`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        console.log("Fetched data:", data);
+
+        const fetchedProducts: Product[] = (data as FetchedData[]).map((product) => ({
+          id: product.uuid,
+          name: product.product_name,
+          category: "Textiles",
+          createdAt: "Not entered",
+          status: "active",
+          scans: 0,
+          recyclability: "0%",
+          materials: ["Cotton", "Polyester"],
+        }));
+        console.log("Fetched products:", fetchedProducts);
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    }
+    fetchProducts()
+  }, [])
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      const response = await fetch(`${LAMBDA_URL}/delete_qr/${productId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== productId));
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+    }
+  };
   const filteredProducts = products.filter(
     (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase()),
+    (product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   return (
@@ -170,10 +179,16 @@ export default function ProductsPage() {
                           </Link>
                         </Button>
                         <Button variant="ghost" size="icon">
-                          <Edit className="h-4 w-4" />
-                          <span className="sr-only">Edit</span>
+                          <Link href={`/dashboard/products/${product.id}`}>
+                            <Edit className="h-4 w-4" />
+                            <span className="sr-only">Edit</span>
+                          </Link>
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteProduct(product.id)}
+                        >
                           <Trash className="h-4 w-4" />
                           <span className="sr-only">Delete</span>
                         </Button>
